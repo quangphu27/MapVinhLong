@@ -1,4 +1,4 @@
 {
   "installCommand": "npm install --unsafe-perm",
-  "buildCommand": "npx react-scripts build"
+  "buildCommand": "react-scripts build"
 }
