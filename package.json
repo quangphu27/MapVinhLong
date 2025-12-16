@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "npx react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -18,8 +18,7 @@
     "react-leaflet": "^4.2.1",
     "react-scripts": "5.0.1"
   },
-  "proxy": "http://localhost:8000",
-  "devDependencies": {},
+  "proxy": "https://quangphu272.pythonanywhere.com",
   "browserslist": {
     "production": [
       ">0.2%",
