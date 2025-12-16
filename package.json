@@ -6,7 +6,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "npx react-scripts build",
-    "test": "react-scripts test",
+    "test": "npx react-scripts test",
     "eject": "react-scripts eject"
   },
   "dependencies": {
@@ -30,5 +30,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
