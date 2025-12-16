@@ -5,12 +5,12 @@
   "private": true,
 
   "engines": {
-    "node": "20.x"
+    "node": "24.x"
   },
 
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "npx react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
