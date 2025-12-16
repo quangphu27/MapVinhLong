@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import API_BASE_URL from '../../config'
 import { X, User, Mail, MapPin, Phone, Calendar, Lock } from 'lucide-react'
 import './Auth.css'
 
@@ -39,7 +40,7 @@ function Profile({ onClose, user, onUpdateSuccess }) {
     if (!token) return
 
     try {
-      const response = await axios.get('/api/auth/profile', {
+      const response = await axios.get(`${API_BASE_URL}/api/auth/profile`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       if (response.data && response.data.user) {
@@ -91,7 +92,7 @@ function Profile({ onClose, user, onUpdateSuccess }) {
 
     setLoading(true)
     try {
-      const response = await axios.put('/api/auth/profile', formData, {
+      const response = await axios.put(`${API_BASE_URL}/api/auth/profile`, formData, {
         headers: { Authorization: `Bearer ${token}` }
       })
       setMessage(response.data.message)
@@ -127,7 +128,7 @@ function Profile({ onClose, user, onUpdateSuccess }) {
 
     setLoading(true)
     try {
-      const response = await axios.post('/api/auth/change-password', {
+      const response = await axios.post(`${API_BASE_URL}/api/auth/change-password`, {
         old_password: passwordData.old_password,
         new_password: passwordData.new_password
       }, {

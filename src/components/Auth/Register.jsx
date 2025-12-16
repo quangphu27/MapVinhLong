@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import API_BASE_URL from '../../config'
 import { X, User, Mail, Lock, MapPin, Phone, Calendar } from 'lucide-react'
 import './Auth.css'
 
@@ -42,7 +43,7 @@ function Register({ onClose, onSwitchToLogin, onRegisterSuccess }) {
     setLoading(true)
     try {
       const { confirmPassword, ...data } = formData
-      const response = await axios.post('/api/auth/register', data)
+      const response = await axios.post(`${API_BASE_URL}/api/auth/register`, data)
       if (response.data.message) {
         onRegisterSuccess()
         onSwitchToLogin()

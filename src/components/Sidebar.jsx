@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import API_BASE_URL from '../config'
 import { Search, Users, MapPin, X, Info, Building2 } from 'lucide-react'
 import './Sidebar.css'
 
@@ -33,7 +34,7 @@ function Sidebar({ selectedXa, onXaSelect, searchQuery, onSearchChange, filters,
 
     try {
       setLoading(true)
-      const response = await axios.get(`/api/search?q=${encodeURIComponent(query)}`)
+      const response = await axios.get(`${API_BASE_URL}/api/search?q=${encodeURIComponent(query)}`)
       setSearchResults(response.data.results || [])
     } catch (error) {
     } finally {
@@ -43,7 +44,7 @@ function Sidebar({ selectedXa, onXaSelect, searchQuery, onSearchChange, filters,
 
   const loadDanTocData = async (maXa) => {
     try {
-      const response = await axios.get(`/api/dan-toc?ma_xa=${maXa}`)
+      const response = await axios.get(`${API_BASE_URL}/api/dan-toc?ma_xa=${maXa}`)
       setDanTocData(response.data.data || [])
     } catch (error) {
     }

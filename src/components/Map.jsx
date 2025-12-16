@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useMemo, useState } from 'react'
 import { MapContainer, TileLayer, GeoJSON, useMap, Marker, Popup, ZoomControl, Polyline, CircleMarker } from 'react-leaflet'
 import L from 'leaflet'
 import axios from 'axios'
+import API_BASE_URL from '../config'
 import 'leaflet/dist/leaflet.css'
 import { Sun, Moon, Globe2, Satellite, Trees, Filter, MapPin, Building2, School, Search, Menu, Layers } from 'lucide-react'
 
@@ -169,7 +170,7 @@ function FilterPanel({ filters, onToggle, isOpen, onToggleOpen, pgdList, pgdDrop
     
     try {
       setDanTocSearchLoading(true)
-      const response = await axios.get(`/api/dan-toc/search?q=${encodeURIComponent(query)}`)
+      const response = await axios.get(`${API_BASE_URL}/api/dan-toc/search?q=${encodeURIComponent(query)}`)
       setDanTocSearchResults(response.data.results || [])
     } catch (error) {
       setDanTocSearchResults([])
@@ -401,8 +402,8 @@ function Map({ selectedXa, onXaSelect, searchQuery, setSearchQuery, filters, set
       try {
         setLoading(true)
         const [phuongXaRes, tinhThanhRes] = await Promise.all([
-          axios.get('/api/geojson/phuong-xa'),
-          axios.get('/api/geojson/tinh-thanh')
+          axios.get(`${API_BASE_URL}/api/geojson/phuong-xa`),
+          axios.get(`${API_BASE_URL}/api/geojson/tinh-thanh`)
         ])
         setPhuongXaData(phuongXaRes.data)
         setTinhThanhData(tinhThanhRes.data)
@@ -421,9 +422,9 @@ function Map({ selectedXa, onXaSelect, searchQuery, setSearchQuery, filters, set
     const loadPoints = async () => {
       try {
         const [ddvhRes, pgdRes, truongRes] = await Promise.all([
-          axios.get('/api/dia-diem-van-hoa'),
-          axios.get('/api/phong-giao-dich'),
-          axios.get('/api/truong-hoc')
+          axios.get(`${API_BASE_URL}/api/dia-diem-van-hoa`),
+          axios.get(`${API_BASE_URL}/api/phong-giao-dich`),
+          axios.get(`${API_BASE_URL}/api/truong-hoc`)
         ])
         setDiaDiem(ddvhRes.data.data || [])
         const pgd = pgdRes.data.data || []

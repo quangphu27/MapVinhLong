@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import API_BASE_URL from './config'
 import Map from './components/Map'
 import UserMenu from './components/UserMenu'
 import './App.css'
@@ -36,7 +37,7 @@ function App() {
       }
 
       try {
-        const response = await axios.get('/api/auth/profile', {
+        const response = await axios.get(`${API_BASE_URL}/api/auth/profile`, {
           headers: { Authorization: `Bearer ${token}` }
         })
         if (response.data.user) {

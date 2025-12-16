@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import API_BASE_URL from '../../config'
 import { X, Mail, Lock, Key } from 'lucide-react'
 import './Auth.css'
 
@@ -24,7 +25,7 @@ function ForgotPassword({ onClose, onSwitchToLogin }) {
 
     setLoading(true)
     try {
-      const response = await axios.post('/api/auth/forgot-password', { email })
+      const response = await axios.post(`${API_BASE_URL}/api/auth/forgot-password`, { email })
       setMessage(response.data.message)
       setStep(2)
     } catch (err) {
@@ -55,7 +56,7 @@ function ForgotPassword({ onClose, onSwitchToLogin }) {
 
     setLoading(true)
     try {
-      const response = await axios.post('/api/auth/reset-password', {
+      const response = await axios.post(`${API_BASE_URL}/api/auth/reset-password`, {
         email,
         code,
         new_password: newPassword

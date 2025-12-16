@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import API_BASE_URL from '../../config'
 import { X, Mail, Lock } from 'lucide-react'
 import './Auth.css'
 
@@ -20,7 +21,7 @@ function Login({ onClose, onSwitchToRegister, onSwitchToForgot, onLoginSuccess }
 
     setLoading(true)
     try {
-      const response = await axios.post('/api/auth/login', { email, password })
+      const response = await axios.post(`${API_BASE_URL}/api/auth/login`, { email, password })
       if (response.data.token) {
         localStorage.setItem('token', response.data.token)
         localStorage.setItem('user', JSON.stringify(response.data.user))

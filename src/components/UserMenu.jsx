@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import axios from 'axios'
+import API_BASE_URL from '../config'
 import { User, LogOut, Settings, X } from 'lucide-react'
 import Login from './Auth/Login'
 import Register from './Auth/Register'
@@ -41,7 +42,7 @@ function UserMenu({ user, onLogout, onLoginSuccess, autoShowLogin = false }) {
     const token = localStorage.getItem('token')
     if (token) {
       try {
-        await axios.post('/api/auth/logout', {}, {
+        await axios.post(`${API_BASE_URL}/api/auth/logout`, {}, {
           headers: { Authorization: `Bearer ${token}` }
         })
       } catch (error) {
@@ -151,7 +152,7 @@ function UserMenu({ user, onLogout, onLoginSuccess, autoShowLogin = false }) {
           onUpdateSuccess={() => {
             const token = localStorage.getItem('token')
             if (token) {
-              fetch('/api/auth/profile', {
+              fetch(`${API_BASE_URL}/api/auth/profile`, {
                 headers: { Authorization: `Bearer ${token}` }
               })
                 .then(res => res.json())
