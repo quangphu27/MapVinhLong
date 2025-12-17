@@ -8,7 +8,7 @@ import './App.css'
 function App() {
   const [selectedXa, setSelectedXa] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const [pgdList, setPgdList] = useState([])
+  const [phuongXaList, setPhuongXaList] = useState([])
   const [user, setUser] = useState(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isChecking, setIsChecking] = useState(true)
@@ -24,7 +24,9 @@ function App() {
       'Miếu': true,
       'Khác': true
     },
-    phong: []
+    phuongXa: [],
+    diaDiem: [],
+    danTocFilter: ''
   })
 
   useEffect(() => {
@@ -120,8 +122,8 @@ function App() {
           setSearchQuery={setSearchQuery}
           filters={filters}
           setFilters={setFilters}
-          pgdList={pgdList}
-          setPgdList={setPgdList}
+          phuongXaList={phuongXaList}
+          setPhuongXaList={setPhuongXaList}
         />
       </div>
     </div>

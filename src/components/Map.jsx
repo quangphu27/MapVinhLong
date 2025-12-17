@@ -4,7 +4,7 @@ import L from 'leaflet'
 import axios from 'axios'
 import API_BASE_URL from '../config'
 import 'leaflet/dist/leaflet.css'
-import { Sun, Moon, Globe2, Satellite, Trees, Filter, MapPin, Building2, School, Search, Menu, Layers } from 'lucide-react'
+import { Sun, Moon, Globe2, Satellite, Trees, Filter, MapPin, Building2, School, Search, Menu, Layers, Users } from 'lucide-react'
 
 delete L.Icon.Default.prototype._getIconUrl
 L.Icon.Default.mergeOptions({
@@ -146,7 +146,7 @@ function SearchBar({
   )
 }
 
-function FilterPanel({ filters, onToggle, isOpen, onToggleOpen, pgdList, pgdDropdownOpen, setPgdDropdownOpen, pgdSearch, setPgdSearch, onXaSelect }) {
+function FilterPanel({ filters, onToggle, isOpen, onToggleOpen, phuongXaList, phuongXaDropdownOpen, setPhuongXaDropdownOpen, phuongXaSearch, setPhuongXaSearch, diaDiemList, diaDiemDropdownOpen, setDiaDiemDropdownOpen, diaDiemSearch, setDiaDiemSearch, onXaSelect }) {
   const [danTocSearchQuery, setDanTocSearchQuery] = useState('')
   const [danTocSearchResults, setDanTocSearchResults] = useState([])
   const [danTocSearchLoading, setDanTocSearchLoading] = useState(false)
@@ -201,42 +201,42 @@ function FilterPanel({ filters, onToggle, isOpen, onToggleOpen, pgdList, pgdDrop
       </div>
       <div className="filter-section">
         <div className="filter-label">
-          <Building2 size={14} /> Phòng
+          <MapPin size={14} /> Phường/Xã
         </div>
         <div className="pgd-select">
           <div
             className="pgd-select-box"
-            onClick={() => setPgdDropdownOpen(!pgdDropdownOpen)}
+            onClick={() => setPhuongXaDropdownOpen(!phuongXaDropdownOpen)}
           >
             <span className="pgd-placeholder">
-              {filters.phong.length > 0 ? `Đã chọn ${filters.phong.length}` : 'Tất cả'}
+              {filters.phuongXa.length > 0 ? `Đã chọn ${filters.phuongXa.length}` : 'Tất cả'}
             </span>
             <span className="pgd-caret">▾</span>
           </div>
-          {pgdDropdownOpen && (
+          {phuongXaDropdownOpen && (
             <div className="pgd-dropdown">
               <div className="pgd-search">
                 <input
                   type="text"
-                  placeholder="Tìm phòng..."
-                  value={pgdSearch}
-                  onChange={(e) => setPgdSearch(e.target.value)}
+                  placeholder="Tìm phường/xã..."
+                  value={phuongXaSearch}
+                  onChange={(e) => setPhuongXaSearch(e.target.value)}
                 />
               </div>
               <div className="pgd-options">
-                {pgdList
-                  .filter(p => p.ten.toLowerCase().includes(pgdSearch.toLowerCase()))
+                {phuongXaList
+                  .filter(p => p.ten.toLowerCase().includes(phuongXaSearch.toLowerCase()))
                   .map(p => (
-                    <label className="pgd-option" key={p.id}>
+                    <label className="pgd-option" key={p.ma_xa}>
                       <input
                         type="checkbox"
-                        checked={filters.phong.includes(String(p.id))}
-                        onChange={() => onToggle('phongMulti', String(p.id))}
+                        checked={filters.phuongXa.includes(p.ma_xa)}
+                        onChange={() => onToggle('phuongXaMulti', p.ma_xa)}
                       />
                       <span>{p.ten}</span>
                     </label>
                   ))}
-                {pgdList.length === 0 && <div className="empty-state">Chưa có PGD</div>}
+                {phuongXaList.length === 0 && <div className="empty-state">Chưa có phường/xã</div>}
               </div>
             </div>
           )}
@@ -245,41 +245,66 @@ function FilterPanel({ filters, onToggle, isOpen, onToggleOpen, pgdList, pgdDrop
 
       <div className="filter-section">
         <div className="filter-label">
-          <School size={14} /> Cấp học
+          <Building2 size={14} /> Địa điểm văn hóa
         </div>
-        {[
-          {key: 'mam_non', label: 'Mầm non'},
-          {key: 'tieu_hoc', label: 'Tiểu học'},
-          {key: 'thcs', label: 'THCS'},
-          {key: 'thpt', label: 'THPT'},
-        ].map(item => (
-          <label className="filter-checkbox" key={item.key}>
-            <input
-              type="checkbox"
-              checked={filters.capHoc[item.key]}
-              onChange={() => onToggle('capHoc', item.key)}
-            />
-            <span>{item.label}</span>
-          </label>
-        ))}
+        <div className="pgd-select">
+          <div
+            className="pgd-select-box"
+            onClick={() => setDiaDiemDropdownOpen(!diaDiemDropdownOpen)}
+          >
+            <span className="pgd-placeholder">
+              {filters.diaDiem.length > 0 ? `Đã chọn ${filters.diaDiem.length}` : 'Tất cả'}
+            </span>
+            <span className="pgd-caret">▾</span>
+          </div>
+          {diaDiemDropdownOpen && (
+            <div className="pgd-dropdown">
+              <div className="pgd-search">
+                <input
+                  type="text"
+                  placeholder="Tìm địa điểm văn hóa..."
+                  value={diaDiemSearch}
+                  onChange={(e) => setDiaDiemSearch(e.target.value)}
+                />
+              </div>
+              <div className="pgd-options">
+                {diaDiemList
+                  .filter(d => (d.ten || '').toLowerCase().includes(diaDiemSearch.toLowerCase()))
+                  .map(d => (
+                    <label className="pgd-option" key={d.id}>
+                      <input
+                        type="checkbox"
+                        checked={filters.diaDiem.includes(String(d.id))}
+                        onChange={() => onToggle('diaDiemMulti', String(d.id))}
+                      />
+                      <span>{d.ten}</span>
+                    </label>
+                  ))}
+                {diaDiemList.length === 0 && <div className="empty-state">Chưa có địa điểm</div>}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="filter-section">
         <div className="filter-label">
-          <MapPin size={14} /> Loại hình
+          <Users size={14} /> Dân tộc
         </div>
         {[
-          {key: 'cong_lap', label: 'Công lập'},
-          {key: 'dan_toc_noi_tru', label: 'Dân tộc nội trú'},
-          {key: 'tu_thuc', label: 'Tư thục'},
-        ].map(item => (
-          <label className="filter-checkbox" key={item.key}>
+          'Kinh',
+          'Chăm',
+          'Nùng',
+          'Thái',
+          'Mường'
+        ].map(name => (
+          <label className="filter-checkbox" key={name}>
             <input
               type="checkbox"
-              checked={filters.loaiHinh[item.key]}
-              onChange={() => onToggle('loaiHinh', item.key)}
+              checked={filters.danTocFilter === name}
+              onChange={() => onToggle('danTocFilterSingle', name)}
             />
-            <span>{item.label}</span>
+            <span>{name}</span>
           </label>
         ))}
       </div>
@@ -376,7 +401,7 @@ function DanTocLegend({ filters }) {
   )
 }
 
-function Map({ selectedXa, onXaSelect, searchQuery, setSearchQuery, filters, setFilters, pgdList, setPgdList }) {
+function Map({ selectedXa, onXaSelect, searchQuery, setSearchQuery, filters, setFilters, phuongXaList, setPhuongXaList }) {
   const [phuongXaData, setPhuongXaData] = React.useState(null)
   const [tinhThanhData, setTinhThanhData] = React.useState(null)
   const [loading, setLoading] = React.useState(true)
@@ -387,8 +412,11 @@ function Map({ selectedXa, onXaSelect, searchQuery, setSearchQuery, filters, set
   const [pgdData, setPgdData] = React.useState([])
   const [filterOpen, setFilterOpen] = React.useState(true)
   const [baseToggleOpen, setBaseToggleOpen] = React.useState(false)
-  const [pgdDropdownOpen, setPgdDropdownOpen] = React.useState(false)
-  const [pgdSearch, setPgdSearch] = React.useState('')
+  const [phuongXaDropdownOpen, setPhuongXaDropdownOpen] = React.useState(false)
+  const [phuongXaSearch, setPhuongXaSearch] = React.useState('')
+  const [diaDiemDropdownOpen, setDiaDiemDropdownOpen] = React.useState(false)
+  const [diaDiemSearch, setDiaDiemSearch] = React.useState('')
+  const [diaDiemList, setDiaDiemList] = React.useState([])
   const mapRef = React.useRef(null)
   const [userLocation, setUserLocation] = React.useState(null)
   const [routeCoords, setRouteCoords] = React.useState([])
@@ -407,6 +435,13 @@ function Map({ selectedXa, onXaSelect, searchQuery, setSearchQuery, filters, set
         ])
         setPhuongXaData(phuongXaRes.data)
         setTinhThanhData(tinhThanhRes.data)
+        if (phuongXaRes.data?.features) {
+          const list = phuongXaRes.data.features.map(f => ({
+            ma_xa: String(f.properties.ma_xa || ''),
+            ten: f.properties.ten_xa || f.properties.ten || ''
+          })).filter(p => p.ma_xa && p.ten).sort((a, b) => a.ten.localeCompare(b.ten, 'vi'))
+          setPhuongXaList(list)
+        }
         setError(null)
       } catch (err) {
         setError('Không thể tải dữ liệu bản đồ')
@@ -426,10 +461,18 @@ function Map({ selectedXa, onXaSelect, searchQuery, setSearchQuery, filters, set
           axios.get(`${API_BASE_URL}/api/phong-giao-dich`),
           axios.get(`${API_BASE_URL}/api/truong-hoc`)
         ])
-        setDiaDiem(ddvhRes.data.data || [])
+        const ddvh = ddvhRes.data.data || []
+        setDiaDiem(ddvh)
+        const ddvhList = ddvh
+          .map(d => ({
+            id: d.id,
+            ten: d.ten_dia_diem || ''
+          }))
+          .filter(d => d.id && d.ten)
+          .sort((a, b) => a.ten.localeCompare(b.ten, 'vi'))
+        setDiaDiemList(ddvhList)
         const pgd = pgdRes.data.data || []
         setPgdData(pgd)
-        setPgdList(pgd)
         setTruongHoc(truongRes.data.data || [])
       } catch (e) {
       }
@@ -438,10 +481,15 @@ function Map({ selectedXa, onXaSelect, searchQuery, setSearchQuery, filters, set
   }, [])
 
   const getStyle = (feature) => {
-    const isSelected = selectedXa && feature.properties.ma_xa === selectedXa.ma_xa
+    const maXa = String(feature.properties.ma_xa || '')
+    const isSelected = selectedXa && String(selectedXa.ma_xa || '') === maXa
     const props = feature.properties
+    const isFilterSelected = filters.phuongXa.includes(maXa)
+    const danTocPhanBo = props.dan_toc_phan_bo || []
+    const selectedDanToc = filters.danTocFilter || ''
     
-    const danTocChuDao = props.dan_toc_chu_dao || 'Kinh'
+    let danTocChuDao = props.dan_toc_chu_dao || 'Kinh'
+
     const danTocColors = {
       'Kinh': '#339af0',
       'Khmer': '#51cf66',
@@ -489,16 +537,49 @@ function Map({ selectedXa, onXaSelect, searchQuery, setSearchQuery, filters, set
       'Brâu': '#20c997',
       'default': '#868e96'
     }
+
+    if (selectedDanToc && (!danTocPhanBo || !danTocPhanBo.some(dt => dt.dan_toc === selectedDanToc))) {
+      return {
+        fillColor: '#ffffff',
+        fillOpacity: 0,
+        color: '#ced4da',
+        weight: 1,
+        opacity: 0.7
+      }
+    }
+    
+    if (selectedDanToc) {
+      danTocChuDao = selectedDanToc
+    }
     
     const baseColor = danTocColors[danTocChuDao] || danTocColors['default']
+    const showDanToc = filters.layers.danToc || !!selectedDanToc
     
-    const showDanToc = filters.layers.danToc
+    if (isFilterSelected) {
+      return {
+        fillColor: '#2ecc71',
+        fillOpacity: 0.6,
+        color: '#27ae60',
+        weight: 3,
+        opacity: 1
+      }
+    }
+    
+    if (isSelected) {
+      return {
+        fillColor: '#ff6b6b',
+        fillOpacity: 0.5,
+        color: '#c92a2a',
+        weight: 3,
+        opacity: 0.9
+      }
+    }
     
     return {
-      fillColor: isSelected ? '#ff6b6b' : baseColor,
-      fillOpacity: isSelected ? 0.5 : (showDanToc ? 0.5 : 0),
-      color: isSelected ? '#c92a2a' : (showDanToc ? baseColor : '#2d3436'),
-      weight: isSelected ? 3 : (showDanToc ? 2 : 1),
+      fillColor: baseColor,
+      fillOpacity: showDanToc ? 0.5 : 0,
+      color: showDanToc ? baseColor : '#2d3436',
+      weight: showDanToc ? 2 : 1,
       opacity: 0.9
     }
   }
@@ -537,21 +618,6 @@ function Map({ selectedXa, onXaSelect, searchQuery, setSearchQuery, filters, set
           ten_xa: props.ten_xa,
           ...props
         })
-      },
-      mouseover: (e) => {
-        const layer = e.target
-        layer.setStyle({
-          fillOpacity: 0.8,
-          weight: 2
-        })
-      },
-      mouseout: (e) => {
-        const layer = e.target
-        const isSelected = selectedXa && feature.properties.ma_xa === selectedXa.ma_xa
-        layer.setStyle({
-          fillOpacity: isSelected ? 0.6 : 0.6,
-          weight: isSelected ? 3 : 1
-        })
       }
     })
   }
@@ -571,11 +637,30 @@ function Map({ selectedXa, onXaSelect, searchQuery, setSearchQuery, filters, set
   }
 
   const toggleFilter = (group, key) => {
-    if (group === 'phongMulti') {
+    if (group === 'phuongXaMulti') {
       setFilters(prev => {
-        const exists = prev.phong.includes(key)
-        const nextPhong = exists ? prev.phong.filter(id => id !== key) : [...prev.phong, key]
-        return { ...prev, phong: nextPhong }
+        const value = String(key)
+        const exists = prev.phuongXa.includes(value)
+        const nextPhuongXa = exists ? prev.phuongXa.filter(id => id !== value) : [...prev.phuongXa, value]
+        return { ...prev, phuongXa: nextPhuongXa }
+      })
+      return
+    }
+
+    if (group === 'diaDiemMulti') {
+      setFilters(prev => {
+        const value = String(key)
+        const exists = prev.diaDiem.includes(value)
+        const nextDiaDiem = exists ? prev.diaDiem.filter(id => id !== value) : [...prev.diaDiem, value]
+        return { ...prev, diaDiem: nextDiaDiem }
+      })
+      return
+    }
+
+    if (group === 'danTocFilterSingle') {
+      setFilters(prev => {
+        const value = String(key)
+        return { ...prev, danTocFilter: prev.danTocFilter === value ? '' : value }
       })
       return
     }
@@ -693,7 +778,7 @@ const CAP_HOC_LABEL = {
       })
     }
 
-    const allPgd = (pgdData.length ? pgdData : pgdList) || []
+    const allPgd = pgdData || []
     allPgd.forEach((p) => {
       if ((p.ten || '').toLowerCase().includes(q)) {
         results.push({
@@ -731,7 +816,7 @@ const CAP_HOC_LABEL = {
     })
 
     return results.slice(0, 12)
-  }, [searchQuery, phuongXaData, pgdData, pgdList, truongHoc, diaDiem])
+  }, [searchQuery, phuongXaData, pgdData, truongHoc, diaDiem])
 
   const handleSelectSearch = (item) => {
     setSearchQuery('')
@@ -758,7 +843,7 @@ const CAP_HOC_LABEL = {
 
       if (item.type === 'PGD') {
         content += '<div>Phòng giao dịch</div>'
-        const found = (pgdData.length ? pgdData : pgdList).find(p => String(p.id) === String(item.id.replace('pgd-', '')))
+        const found = pgdData.find(p => String(p.id) === String(item.id.replace('pgd-', '')))
         if (found?.vi_do && found?.kinh_do) {
           content += `<div>Tọa độ: ${found.vi_do.toFixed(4)}, ${found.kinh_do.toFixed(4)}</div>`
         }
@@ -982,7 +1067,7 @@ function formatLoai(loai) {
           />
         )}
         
-        {phuongXaData && filters.layers.danToc && (
+        {phuongXaData && (
           <>
             <GeoJSON
               ref={geoJsonRef}
@@ -1007,10 +1092,12 @@ function formatLoai(loai) {
         )}
 
         {filters.layers.diaDiemVanHoa && diaDiem
-          .filter(d =>
-            filters.loaiDiaDiem[d.loai_dia_diem || 'Khác'] &&
-            matchQuery(d.ten_dia_diem)
-          )
+          .filter(d => {
+            const matchLoai = filters.loaiDiaDiem[d.loai_dia_diem || 'Khác']
+            const matchText = matchQuery(d.ten_dia_diem) || matchQuery(d.ten_xa)
+            const matchSelected = filters.diaDiem.length === 0 || filters.diaDiem.includes(String(d.id))
+            return matchLoai && matchText && matchSelected
+          })
           .map(d => (
             <Marker
               key={`ddvh-${d.id}`}
@@ -1030,26 +1117,6 @@ function formatLoai(loai) {
             </Marker>
           ))}
 
-        {(pgdData.length ? pgdData : pgdList)
-          .filter(p =>
-            filters.phong.length > 0 &&
-            filters.phong.includes(String(p.id)) &&
-            matchQuery(p.ten)
-          )
-          .map(p => (
-          <Marker
-            key={`pgd-${p.id}`}
-            position={[p.vi_do, p.kinh_do]}
-            icon={pgdIcon}
-          >
-            <Popup>
-              <div style={{ minWidth: 180 }}>
-                <strong>{p.ten}</strong>
-                <div>Tọa độ: {p.vi_do?.toFixed(4)}, {p.kinh_do?.toFixed(4)}</div>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
 
         {filters.layers.truongHoc && truongHoc
           .filter(t => {
@@ -1123,11 +1190,16 @@ function formatLoai(loai) {
         onToggle={toggleFilter}
         isOpen={filterOpen}
         onToggleOpen={() => setFilterOpen(!filterOpen)}
-        pgdList={pgdData.length ? pgdData : pgdList}
-        pgdDropdownOpen={pgdDropdownOpen}
-        setPgdDropdownOpen={setPgdDropdownOpen}
-        pgdSearch={pgdSearch}
-        setPgdSearch={setPgdSearch}
+        phuongXaList={phuongXaList}
+        phuongXaDropdownOpen={phuongXaDropdownOpen}
+        setPhuongXaDropdownOpen={setPhuongXaDropdownOpen}
+        phuongXaSearch={phuongXaSearch}
+        setPhuongXaSearch={setPhuongXaSearch}
+        diaDiemList={diaDiemList}
+        diaDiemDropdownOpen={diaDiemDropdownOpen}
+        setDiaDiemDropdownOpen={setDiaDiemDropdownOpen}
+        diaDiemSearch={diaDiemSearch}
+        setDiaDiemSearch={setDiaDiemSearch}
         onXaSelect={onXaSelect}
       />
       <div className="fab-left">
