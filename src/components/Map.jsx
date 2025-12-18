@@ -293,6 +293,8 @@ function FilterPanel({ filters, onToggle, isOpen, onToggleOpen, phuongXaList, ph
         </div>
         {[
           'Kinh',
+          'Khmer',
+          'Hoa',
           'Chăm',
           'Nùng',
           'Thái',
